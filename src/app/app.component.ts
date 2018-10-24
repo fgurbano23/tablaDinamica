@@ -7,7 +7,6 @@ import {CellConfigurationModel} from './cellConfiguration.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  x =[[1,2],[3,4]];
   row = 3;
   oldRow = this.row;
   cntCol = [];
@@ -18,35 +17,51 @@ export class AppComponent {
     for (let i = 0 ; i < this.row; i++) {
       this.cntCol.push(3);
     }
-    this.refactorColumns();
-  }
-  refactorColumns() {
-    this.matrix = [];
     for (let i = 0; i < this.cntCol.length; i++) {
-      // this.matrix.push(Array(this.cntCol[i]).fill(this.cntCol[i]));
-      this.matrix.push(new Array(this.cntCol[i]).fill(new CellConfigurationModel( '', '',  '', '', '', '')));
+      let temp = [];
+      for (let j = 0; j < this.cntCol[i];j++){
+        temp.push(new CellConfigurationModel( '', '',  '', '', '', ''));
+      }
+      this.matrix.push(temp);
     }
   }
+
+  pushCol(i) {
+    if (this.cntCol[i] < 5) {
+      this.cntCol[i] = this.cntCol[i] + 1;
+      this.matrix[i].push(new CellConfigurationModel( '', '',  '', '', '', ''));
+    }
+  }
+  popCol(i) {
+    if (this.cntCol[i] > 1) {
+    this.cntCol[i] = this.cntCol[i] - 1;
+    this.matrix[i].pop();
+    this._row = 0;
+    this._col = 0;
+    console.log(this.matrix[i]);
+    }
+  }
+
   refactorRows() {
-    // console.log(this.row + '-' + this.oldRow);
     if (this.row > this.oldRow) {
-      for (let it = 0; it < this.row - this.oldRow; it++) {
+      for (let i = 0; i< this.row -this.oldRow; i++ ){
         this.cntCol.push(3);
-        this.matrix.push([new CellConfigurationModel( '', '',  '', '', '', '')]);
+        this.matrix.push(
+          [
+            new CellConfigurationModel( '', '',  '', '', '', ''),
+            new CellConfigurationModel( '', '',  '', '', '', ''),
+            new CellConfigurationModel( '', '',  '', '', '', '')
+          ]
+        );
       }
-      // console.log('matrix:' + this.matrix.length);
       this.oldRow = this.row;
-      this.refactorColumns();
     }
     if (this.row < this.oldRow) {
-      for (let it = 0; it < this.oldRow - this.row; it++) {
+      for (let i = 0; i < this.oldRow -this.row; i++ ) {
         this.cntCol.pop();
         this.matrix.pop();
       }
-      // console.log('matrix:' + this.matrix.length);
       this.oldRow = this.row;
-      this.refactorColumns();
-
     }
   }
   getCell(i, j) {
@@ -54,12 +69,12 @@ export class AppComponent {
     this._row = i;
     this._col = j;
   }
-  show() {
-    console.log(this.x);
-    this.x[0][0] = 4;
-    console.log(this.x);
-  }
+
   size(i) {
     return ( 100 / this.cntCol[i]);
+  }
+
+  border(tam) {
+    return 'solid #A8A8A8 ' + tam + 'px';
   }
 }

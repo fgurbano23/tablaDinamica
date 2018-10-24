@@ -3,16 +3,19 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
-      <div *ngFor="let filas of this.matrix; let i = index">
+      <div *ngFor="let filas of this.matrix; let i = index;">
         <div class="row">
           <div class="col-lg-10">
             <div style="display:inline;" >
-              <input *ngFor="let columnas of filas; let j = index;" name="{{i+'_'+j}}" id="{{i+'_'+j}}" [ngStyle]="{'width': size(i)+'%'}" (click)="getCell(i,j)"  >
-              <!--<input *ngFor="let columnas of filas" >-->
+              <input *ngFor="let columnas of filas; let j = index;" name="{{i+'.'+j}}" id="{{i+'.'+j}}"
+                     [ngStyle]="{'width': size(i)+'%','color':matrix[i][j]._color,'border': border(matrix[i][j]._border),'text-align':matrix[i][j]._align}"
+                     (click)="getCell(i,j)"
+                     [(ngModel)] ="matrix[i][j]._texto" >
             </div>
           </div>
           <div style="display:inline;" class="col-lg-2">
-            <input type="number" min="1" max="5" name="col" [(ngModel)]="cntCol[i]" (change)="refactorColumns()">
+            <button (click)="pushCol(i)">push</button>
+            <button (click)="popCol(i)">pop</button>
           </div>
         </div>
       </div>
@@ -21,6 +24,13 @@
 </div>
 
 <div>
-  {{_row +""+_col+""+this.matrix[_row][_col]._texto}}
-  <button (click)="show()">show</button>
+  {{'fila: '+_row+' columna:'+_col }}
+  <br>
+  <input type="text" [(ngModel)]="this.matrix[_row][_col]._color" placeholder="color">
+  <br>
+  <input type="number" placeholder="border" [(ngModel)]="this.matrix[_row][_col]._border" [min]="1.5" >
+  <br>
+  <input type="text" placeholder="align" [(ngModel)]="this.matrix[_row][_col]._align">
 </div>
+
+<pre> {{matrix | json}}</pre>
